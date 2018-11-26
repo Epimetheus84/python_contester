@@ -47,6 +47,14 @@ def execute_users_code(code, needed_input, output, max_execution_time):
         sys.stdout = sys.__stdout__
         sys.stderr = sys.__stderr__
         return {'error': 'Syntax error: ' + str(err.msg) + ' on line ' + str(err.lineno)}
+    except ModuleNotFoundError:
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        return {'error': 'You cannot import modules'}
+    except:
+        sys.stdout = sys.__stdout__
+        sys.stderr = sys.__stderr__
+        return {'error': 'Unexpected error:' + str(sys.exc_info()[0])}
 
     execution_time = time.time() - start_time
     # switch back to default console
@@ -71,12 +79,13 @@ def execute_users_code(code, needed_input, output, max_execution_time):
 
 code = """
 data = int(input()) ** 2
-time.sleep(1
+time.sleep(1)
+import selenium
 print(data)
 """
 
 needed_inputs = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
-needed_output = ['1', '4', '9', '16', '25', '36', '49', '65', '81']
+needed_output = ['1', '4', '9', '16', '25', '36', '49', '64', '81']
 
 test_num = 0
 for needed_input, needed_output in zip(needed_inputs, needed_output):
