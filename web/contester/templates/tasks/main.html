@@ -1,0 +1,102 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #91cdfd; height: 100px;">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+              aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse text-right" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <div class="nav-item nav-link active">Hello, {{ request.session.user_name }} </div>
+          <a class="nav-item nav-link disabled" href="/logout">Log out</a>
+        </div>
+      </div>
+    </nav>
+
+    <div style="display: flex;">
+        <div class="card m-5" style="width: 25em;">
+              <div class="card-header">
+                    Themes
+              </div>
+              <div class="card-body" >
+                  <div id="accordion">
+                      {% for theme in themes %}
+                          <div class="card">
+                              <div class="card-header" id="heading-{{ theme.id }}">
+                                  <h5 class="mb-0">
+                                      <button class="btn btn-link" data-toggle="collapse" data-target="#collapse-{{ theme.id }}" aria-expanded="false" aria-controls="collapse-{{ theme.id }}">
+                                          {{ theme.name }}
+                                      </button>
+                                  </h5>
+                              </div>
+                              <div id="collapse-{{ theme.id }}" class="collapse show" aria-labelledby="heading-{{ theme.id }}" data-parent="#accordion">
+                                  <div class="card-body">
+                                      {% for exercise in theme.exercises %}
+                                      <a href="/exercise/show/{{ exercise.id }}">{{ exercise.name }}</a>
+                                      {% endfor %}
+                                  </div>
+                              </div>
+                          </div>
+                      {% endfor %}
+                  </div>
+              </div>
+        </div>
+
+        {% if current_exercise %}
+    <div class="card m-5" style="width: 50em;">
+          <div class="card-header">
+                Code Field
+          </div>
+          <div class="card-block m-5 ">
+              <form action="/exercise/submit/{{ current_exercise.id }}" method="POST">
+                  {% csrf_token %}
+                  <div class="md-form mb-4 pink-textarea active-pink-textarea-2">
+                      <textarea type="text" name="code" required="required" id="form17" class="md-textarea form-control" rows="3" style="border: none; height: 500px;"></textarea>
+                      <label for="form17">Enter your code here</label>
+                  </div>
+                  <button class="btn btn-primary mb-3">Submit</button>
+              </form>
+              {% if tests %}
+              <table class="table table-bordered">
+                  <thead><tr><th>Results:</th></tr></thead>
+                  <tbody>
+                    {% for test in tests %}
+                    <tr>
+                        {% if test.successfully %}
+                            <td style="color: green;">{{ test.message }}</td>
+                        {% else %}
+                            <td style="color: red;">{{ test.message }}</td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+              {% endif %}
+          </div>
+    </div>
+        {% else %}
+        <div class="card m-5" style="width: 50em;">
+            <div class="card-header">
+            Select exercise to start.
+            </div>
+        </div>
+        {% endif %}
+
+    <div class="card m-5" style="width: 25em;">
+          <div class="card-header">
+                Exercise Description
+          </div>
+          <div class="card-block m-5">
+                {% if current_exercise %}
+                    {{ current_exercise.description }}
+                    Maximum time of execution: {{ current_exercise.maximum_time }}
+                {% else %}
+                    There is no description yet
+                {% endif %}
+
+          </div>
+    </div>
+
+    </div>
+{% endblock %}

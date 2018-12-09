@@ -6,3 +6,13 @@ class Theme(models.Model):
 
     def __str__(self):
         return self.name
+
+    @staticmethod
+    def all_exercises():
+        res = []
+        themes = Theme.objects.all()
+        for theme in themes:
+            theme.exercises = theme.exercise_set.all()
+            res.append(theme)
+
+        return res

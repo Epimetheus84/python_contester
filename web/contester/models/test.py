@@ -10,4 +10,4 @@ class Test(models.Model):
     user = models.ForeignKey(User, models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.message

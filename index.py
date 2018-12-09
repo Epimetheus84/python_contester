@@ -82,6 +82,7 @@ import random
 data = input()
 data = data.split()
 data.sort(reverse=True)
+time.sleep(5)
 print(data)
 """
 
